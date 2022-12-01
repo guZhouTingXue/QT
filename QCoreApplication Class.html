@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xml:lang="en" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <title>QCoreApplication Class</title>
+  <meta name="CreationTime" content="2022-12-01T21:55:28Z" />
+  <meta name="ModificationTime" content="2022-12-01T21:55:28Z" />
+  <meta name="Generator" content="Scrivener for Windows HTML Writer" />
+  <meta name="ScrivenerVersion" content="3.1.2.0" />
+  <style type="text/css">
+    body {font-family: 'Sitka Text'; font-size: 12pt; font-style: normal; font-weight: 400}
+    div.div1 {margin: 0 auto; width: 600px}
+    img.img1 {height: auto; width: 100%}
+    span.s1 {color: #0095df; font-size: 1.08rem; font-weight: bold}
+    span.s2 {font-style: italic}
+    span.s3 {font-family: 'Sitka Subheading'}
+    span.Scrivener-tab-span {white-space:pre}
+    span.Scrivener-converted-space {white-space:pre;}
+  </style>
+</head>
+<body>
+<div class="div1">
+<h2 class="ps1"><a id="doc1"></a><strong><span class="s1">[static] bool QCoreApplication::sendEvent(QObject *receiver,QEvent *event)</span></strong></h2>
+<p class="ps2">直接地发送<em><span class="s2">event</span></em> 事件 到接收方 <em><span class="s2">receiver，</span></em> 使用notify() 函数。返回值从事件处理器返回。</p>
+<p class="ps2">这个事件不会被删除当它已经被发送。通常的方法是在栈（stack）中创建事件，如：</p>
+<p class="ps2">QMouseEvent event(QEvent::MouseButtonPress,pos,0,0,0);</p>
+<p class="ps2">QApplication::sendEvent(mainWindow,&#38;event);</p>
+<p class="ps2">参见： postEvent() 和 notify().</p>
+<p class="ps3"><br /></p>
+<p class="ps2">Ming:</p>
+<p class="ps2"><span class="Scrivener-tab-span">	</span>1.为什么发送了的事件不会被删除？那事件不是越堆越多？什么时候删除？由事件处理函数删除？哦，因为是在stack上创建的？所以不用主动delete</p>
+<p class="ps4"><span class="Scrivener-tab-span">	</span>2.调用notify（）</p>
+<p class="ps4"><img alt="" src="QCoreApplication Class_files/Clipboard-Image.png" class="img1" /></p>
+<p class="ps2"><span class="Scrivener-tab-span">	</span>事件存在，事件不是自发的。self存在-》调用notifyInternal（）；不存在，返回false。<span class="Scrivener-tab-span">	</span></p>
+<p class="ps2">3.事件的处理</p>
+<p class="ps2">event（）函数创建了一个QMouseEvent类型的 事件？，这里事件是在stack上创建的，sendEvent（）发送给mainWindow，实参取event的地址</p>
+<p class="ps2">4.直接发送给对象，不经过事件循环，所以是同步的（即时响应）</p>
+<p class="ps3"><br /></p>
+<h2 class="ps1"><strong><span class="s1">[static] void QCoreApplication::postEvent(QObject *receiver,QEvent *event,int priority=Qt::NormalEventPriority)</span></strong></h2>
+<p class="ps2">添加event 事件，同时对象receiver作为事件的接收方，到一个事件队列中 并 立即返回。</p>
+<p class="ps2">事件必须被分配在堆上，因为委派（post）的事件队列会获取事件的自主权，并删除它一次，在它已经被委派的时候。获取事件并不安全，在它已经被委托后。</p>
+<p class="ps2">当控制权返回到主事件循环，所有事件（被存储在队列中的）会被发送 通过notify（）函数。</p>
+<p class="ps2">事件被存储 按照优先级递减的顺序，如，具有高优先级的事件被请求在 一个低优先级的事件前。优先级可以是任何整数值，如 在INT_MAX 和 INT_MIN 之间，也包括这两个值；查看Qt::EventPriority 寻找更多细节。相同优先级的事件会被按照委托（posted）的顺序处理。</p>
+<p class="ps2">注意：这个函数是线程安全的。</p>
+<p class="ps2">常见：sendEvent（），notify(),sendPostedEvents()</p>
+<p class="ps3"><br /></p>
+<p class="ps2">Post:发布</p>
+<p class="ps2">Ming:</p>
+<p class="ps2"><span class="Scrivener-tab-span">	</span>1.事件在事件循环中什么时候被发布？调用notify（）发布事件？发布后这个事件就要delete了</p>
+<p class="ps2"><span class="Scrivener-tab-span">	</span>2.什么时候control返回主事件循环？主事件循环是在应用程序对象中被创建？</p>
+<p class="ps2"><span class="Scrivener-tab-span"><span class="Scrivener-tab-span">	</span></span></p>
+<h2 class="ps1"><strong><span class="s1">[virtual] bool QCoreApplication::notify(QObject *receiver,QEvent *event)</span></strong></h2>
+<p class="ps3"><br /></p>
+<p class="ps2">发送事件到接收方：receiver-&#62;event(<em><span class="s2">event</span></em>).返回从接收方事件处理器返回的值。注意这个函数被调用 堆所有事件发送到任何对象，在任何线程中。</p>
+<p class="ps2">对某些事件的类型（如 鼠标和按键事件），事件会被传播到接收方的父类 并 向上 到达顶级对象，如果接收者对这个事件没有兴趣（如， 它返回 false）。</p>
+<p class="ps2">这里是5种处理事件的方式；重新实现（重写-override）这个虚函数（notify（））只是其中一种。所有的5种方法被列在下面：</p>
+<p class="ps2">1.重新定义 paintEvent（），mousePressEvent（） 等（and so on），这是最常见的，简单的，和 最不费力？最不强力的方式。</p>
+<p class="ps2">2.重新实现这个函数。这非常有力，提供完全的控制；但是只有一个子类能起作用在一个时刻。</p>
+<p class="ps2">3.安装一个事件过滤器 在 QCoreApplication::instance()上。这样一个事件过滤器有能力处理所有事件，来自任何widgets，因此这是一个和重新实现notify() 一样有力的。此外，可以有多个应用-全局事件过滤器。全局事件过滤器甚至 （可以） 查看disabled 的控件 的鼠标事件。注意，应用事件过滤器 只能被 存在于主线程的对象调用。</p>
+<p class="ps2">4.重新实现事件 QObject::event(像QWidget 一样).如果你这样做，你获取tab 按键处理，你get？ 查看事件 在任何 指定的控件 <span class="Scrivener-converted-space"> </span>事件过滤器之前。</p>
+<p class="ps2">5.安装一个事件过滤器在一个对象上。这样一个事件过滤器获取所有的事件，保活tab 和Shift+Tab 按键事件，只要（as long as）他们不改变焦点控件</p>
+<p class="ps2">未来方向：这个函数不会被一个存在于主线程外部的对象调用在Qt 6中。需要这个功能性的应用需要寻找其他方案为了他们的事件检测需要，同时。这个改变可能扩展到主线程，导致这个函数被弃用。</p>
+<p class="ps2"><span class="s3">警告：如果你重写这个函数，你必须确保所有处理事件的线程 停止 这样？-so，在你的应用程序对象被销毁前。这包括线程 由其他库开始的 你可能正在使用的，但是不适用Qt自己的线程。</span></p>
+<p class="ps5"><br /></p>
+<p class="ps2"><span class="s3">Ming：。。。</span></p>
+<p class="ps3"><br /></p>
+<p class="ps3"><br /></p>
+</div>
+</body>
+</html>

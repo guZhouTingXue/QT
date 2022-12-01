@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xml:lang="en" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <title>QObject</title>
+  <meta name="CreationTime" content="2022-12-01T21:53:21Z" />
+  <meta name="ModificationTime" content="2022-12-01T21:53:21Z" />
+  <meta name="Generator" content="Scrivener for Windows HTML Writer" />
+  <meta name="ScrivenerVersion" content="3.1.2.0" />
+  <style type="text/css">
+    body {font-family: 'Sitka Text'; font-size: 12pt; font-style: normal; font-weight: 400}
+    div.div1 {margin: 0 auto; width: 600px}
+    span.s1 {color: #0095df; font-size: 1.08rem; font-weight: bold}
+    span.s2 {font-style: italic}
+    span.s3 {font-family: 'Consolas'; font-size: 0.92rem}
+    span.s4 {background-color: #ffabba}
+    span.s5 {color: #0095df; font-size: 1.08rem; font-weight: bold; text-decoration: underline}
+    span.s6 {background-color: #bdf49b}
+    span.Scrivener-tab-span {white-space:pre}
+    span.Scrivener-converted-space {white-space:pre;}
+  </style>
+</head>
+<body>
+<div class="div1">
+<h2 class="ps1"><a id="doc1"></a><br /></h2>
+<h2 class="ps2"><strong><span class="s1">【virtual】 bool QObject::eventFilter(QObject *watched,QEvent *event)</span></strong></h2>
+<p class="ps3">过滤事件，如果这个对象（this）已经作为一个事件过滤器被安装在<em><span class="s2"> watched</span></em> object 上</p>
+<p class="ps3">在你的这个函数的重写中，如果你想要过滤事件出去，如 暂停它被进一步（adv. 更远地）处理,返回true；否则（需要being handled further）返回false。</p>
+<p class="ps3">如：</p>
+<p class="ps4"><span class="s3">MainWindow::MainWindow(QWidget *parent)</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>: QMainWindow(parent)</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>, ui(new Ui::MainWindow)</span></p>
+<p class="ps4"><span class="s3">{</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>ui-&#62;setupUi(this);</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>textEdit=new QTextEdit;</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>setCentralWidget(textEdit);</span></p>
+<p class="ps4"><span class="s3"><br /></span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>textEdit-&#62;installEventFilter(this);</span></p>
+<p class="ps4"><span class="s3"><br /></span></p>
+<p class="ps4"><span class="s3">}<br /></span></p>
+<p class="ps4"><span class="s3">bool MainWindow::eventFilter(QObject *obj, QEvent *event)</span></p>
+<p class="ps4"><span class="s3">{</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>if(obj == textEdit)</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>{</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">       </span>if(event-&#62;type() == QEvent::KeyPress)</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">       </span>{</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">           </span>QKeyEvent *keyEvent=static_cast&#60;QKeyEvent*&#62;(event);</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">           </span>qDebug()&#60;&#60;&#34;Ate key press&#34;&#60;&#60;keyEvent-&#62;key();</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">           </span>return true;</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">       </span>}</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">       </span>else</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">       </span>{</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">           </span>return QMainWindow::eventFilter(obj,event);</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">       </span>}</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>}</span></p>
+<p class="ps4"><span class="s3">}</span></p>
+<p class="ps5"><br /></p>
+<p class="ps3">注意 在上面的例子中 未管理的事件被传递到基类的eventFilter（）函数中，因为 基类可能已经重写eventFilter（）用于它自己的内部需求。</p>
+<p class="ps3">一些事件，如 QEvent::ShortcutOverride必须 被显示地接收（通过调用accept（）在他们上）以防止传播。</p>
+<p class="ps3">警告：如果你删除 receiver object 在这个函数中，确保返回true。否则，Qt 会 运送事件到删除的object，之后程序可能崩溃。</p>
+<p class="ps3">参见：installEventFilter（）。</p>
+<p class="ps6"><br /></p>
+<p class="ps3">Ming：<span class="s4">问：</span>如果需要处理shortCutOverride事件，需要额外的调用accept（）？</p>
+<p class="ps3">MainWindow 对要发送给子控件textEdit 的事件进行过滤，如果是鼠标事件则打印按键值，返回true，表示该事件被过滤，那么事件将不会先下发送给子控件-textEdit。其他事件交给父类中的eventFilter（）处理。</p>
+<p class="ps3"><span class="s4">问：</span>这里MainWindow不处理的事件也可以直接返回false吧？同样的会交给父对象？</p>
+<p class="ps6"><br /></p>
+<p class="ps3">首先被监视的控件<em><span class="s2">watched</span></em> 要安装 当前对象作为事件过滤器，这样发送给watched的事件才会被传递过来进行过滤，返回值的含义代表了该事件是否会被过滤。那么eventFilter就是用来确认事件是否被过滤的，而事件接收后的处理要在事件处理器中进行。</p>
+<p class="ps6"><br /></p>
+<h2 class="ps2"><strong><span class="s1">void QObject::installEventFilter(</span></strong><strong><a href="qobject.html#QObject"><span class="s5">QObject</span></a></strong><strong><span class="s1"> *filterObj)</span></strong></h2>
+<p class="ps7">安装一个事件过滤器<em><span class="s2">filterObj  </span></em>在当前对象上。例如：</p>
+<p class="ps7"><span class="Scrivener-tab-span">	</span>MonitoredObj-&#62;installEventFilter(filterObj);</p>
+<p class="ps7">一个事件过滤器 是一个 object 它接收 所有事件，这些事件被发送到这个对象（monitoredObj）。过滤器既能停止事件也能运送它（event）到这个对象。事件过滤器<em><span class="s2"> filterObj </span></em></p>
+<p class="ps7">接收事件经由它的eventFilter（）函数。eventFilter（）函数必须返回真，如果事件需要被过滤，（如。停止）；或者它必须返回false。</p>
+<p class="ps7">如果多个事件过滤器被安装在同一个对象上，过滤器-被最后安装的最先起作用。</p>
+<p class="ps7">这里是一个按键吞噬者KeyPressEater 类，它吃掉它的被监视的对象的按键</p>
+<p class="ps4"><span class="s3">bool KeyProcessEater::eventFilter(QObject *obj, QEvent *event)</span></p>
+<p class="ps4"><span class="s3">{</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>if(event-&#62;type() == QEvent::KeyPress)</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>{</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">       </span>QKeyEvent *keyEvent=static_cast&#60;QKeyEvent*&#62;(event);</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">       </span>qDebug(&#34;Ate Key press %d&#34;,keyEvent-&#62;key());</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">       </span>return true;</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>}</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>else</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>{</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">       </span>return QObject::eventFilter(obj,event);</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>}</span></p>
+<p class="ps4"><span class="s3"><br /></span></p>
+<p class="ps4"><span class="s3">}</span></p>
+<p class="ps3">这里是如何安装它到两个控件上：</p>
+<p class="ps4"><span class="s3"><br /></span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>KeyProcessEater *keyProceeeEater=new KeyProcessEater;</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>QPushButton *pushButton=new QPushButton;</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>QLineEdit *lineEdit=new QLineEdit;</span></p>
+<p class="ps8"><br /></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>pushButton-&#62;installEventFilter(keyProceeeEater);</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>LineEdit-&#62;installEventFilter(keyProceeeEater);</span></p>
+<p class="ps8"><br /></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>ui-&#62;verticalLayout_2-&#62;addWidget(pushButton);</span></p>
+<p class="ps4"><span class="s3"> <span class="Scrivener-converted-space">   </span>Ui-&#62;verticalLayout_2-&#62;addWidget(lineEdit);</span></p>
+<p class="ps8"><br /></p>
+<p class="ps3">QShortcut 类，如 使用这项技术来拦截快捷键输入。</p>
+<p class="ps3">警告：如果 你delete接收object 在你的eventFilter（）函数，确保返回true。如果你返回false，Qt 发送事件到delete object 之后程序会崩溃。</p>
+<p class="ps3">注意过滤器对象必须是在同一个线程 同这个对象（安装过滤器的object）。如果 <em><span class="s2">filterObj </span></em>在不同的线程中，这个函数不会起作用。如果两者中任意一个？either <em><span class="s2">filterObj</span></em> 或 这个 <em><span class="s2">object </span></em>被移动到不同的线程 在调用这个函数后，事件过滤器不会被调用 直到两个object 再次处在同一个线程中 affinity -吸引力，类同？ （it is not removed - 在没有被删除前）</p>
+<p class="ps6"><br /></p>
+<p class="ps3">参见： removeEventFilter（），eventFilter（），和event（）</p>
+<p class="ps6"><br /></p>
+<p class="ps3">Ming：</p>
+<p class="ps6"><br /></p>
+<h2 class="ps2"><strong><span class="s1">Void Qobject::removeEventFilter(QObject *obj)</span></strong></h2>
+<p class="ps6"><br /></p>
+<p class="ps3">移除一个事件过滤器对象 <em><span class="s2">obj</span></em> 从这个对象中。请求被忽略，如果这样一个事件过滤器已经不存在。</p>
+<p class="ps3">这个对象的所有事件过滤器被 自动地移除，当这个对象被销毁时。</p>
+<p class="ps3">这总是安全的-移除一个事件过滤器，甚至是在事件过滤器 起作用（如 来自？from eventFilter（）函数）。</p>
+<p class="ps3">Ol：activation - 激活</p>
+<p class="ps3">常见：installEventFilter（），eventFIlter，和event（）。</p>
+<p class="ps6"><br /></p>
+<p class="ps3">Ming：总是安全是因为过滤器和被监视对象-watched 需要在一个线程中？这样顺序执行执行eventFilter（）期间不会移除filter？</p>
+<p class="ps6"><br /></p>
+<h2 class="ps2"><strong><span class="s1">[virtual] bool QObject::event(QEvent *e)</span></strong></h2>
+<p class="ps3">这个虚函数接收事件到一个对象中，并且应该返回true 如果这个事件 <em><span class="s2">e</span></em> 被承认和处理 。</p>
+<p class="ps3">Evetn（）函数应该被重写为了自定义对象的行为。</p>
+<p class="ps3">确认 你调用父类事件重写（函数） 对所有你没有管理的事件。</p>
+<p class="ps3">例子：</p>
+<p class="ps3"><span class="Scrivener-tab-span">	</span>Class MyClass::public QWidget{</p>
+<p class="ps3"><span class="Scrivener-tab-span">	</span>Q_OBJECT</p>
+<p class="ps3">Public:</p>
+<p class="ps3"><span class="Scrivener-tab-span">	</span>MyClass(QWidget *parent=0);</p>
+<p class="ps3">~MyClass();</p>
+<p class="ps3">Bool event(QEvent *ev) override</p>
+<p class="ps3">{</p>
+<p class="ps3"><span class="Scrivener-tab-span">	</span>If(ev-&#62;type() == QEvent::Show)</p>
+<p class="ps3">{<span class="Scrivener-tab-span">	</span>//重写 对show事件的管理 如果有（if any）</p>
+<p class="ps3"><span class="Scrivener-tab-span">	</span>DoThings();</p>
+<p class="ps3"><span class="Scrivener-tab-span">	</span>Return true;</p>
+<p class="ps3">}else if(ev-&#62;type() == QEvent::PolishRequest)</p>
+<p class="ps3">{<span class="Scrivener-tab-span">	</span>//对polishRequesh 事件管理的补充</p>
+<p class="ps3"><span class="Scrivener-tab-span">	</span>DoThings2();</p>
+<p class="ps3"><span class="Scrivener-tab-span">	</span>QWidget::event(ev);</p>
+<p class="ps3"><span class="Scrivener-tab-span">	</span>Return true;</p>
+<p class="ps3">}</p>
+<p class="ps3"><span class="Scrivener-tab-span">	</span>//确保 剩余的事件 被处理</p>
+<p class="ps3"><span class="Scrivener-tab-span">	</span>Return QWidget::event(ev);</p>
+<p class="ps3">}</p>
+<p class="ps3">};</p>
+<p class="ps3">常见：installEventFiter()</p>
+<p class="ps6"><br /></p>
+<p class="ps3">Ming:event（）就是所有事件的事件管理器了吧，而一些特定的事件管理器是被event（）调用的吧？如：mousePressEvent（）</p>
+<p class="ps3"><span class="s6">答：</span>是的，见QWidget类的event（）源码</p>
+<p class="ps3">所有事件必须被处理，就算不处理直接返回true也是处理了😊，未处理的事件交由父类处理。</p>
+<p class="ps6"><br /></p>
+<p class="ps3">C++语法：子类重写了父类的方法f（）后，在调用父类的方法f（）时需要指明是父类的f（）。通过名称作用域。</p>
+<p class="ps6"><br /></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xml:lang="en" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <title>QEvent</title>
+  <meta name="CreationTime" content="2022-12-01T21:55:05Z" />
+  <meta name="ModificationTime" content="2022-12-01T21:55:05Z" />
+  <meta name="Generator" content="Scrivener for Windows HTML Writer" />
+  <meta name="ScrivenerVersion" content="3.1.2.0" />
+  <style type="text/css">
+    body {font-family: 'Sitka Text'; font-size: 12pt; font-style: normal; font-weight: 400}
+    div.div1 {margin: 0 auto; width: 600px}
+    span.s1 {color: #0095df; font-size: 1.08rem; font-weight: bold}
+    span.s2 {font-size: 1.50rem; font-weight: bold}
+  </style>
+</head>
+<body>
+<div class="div1">
+<h2 class="ps1"><a id="doc1"></a><strong><span class="s1">QEVent Class</span></strong></h2>
+<p class="ps2">QEvent 类是 所有事件类的基类。事件对象包含事件参数。更多。。。</p>
+<p class="ps3"><br /></p>
+<h1 class="ps1"><strong><span class="s2">Property Documentation</span></strong></h1>
+<h2 class="ps1"><strong><span class="s1">Accepted:bool</span></strong></h2>
+<p class="ps2">事件对象的接收标志</p>
+<p class="ps2">设置接收参数指示事件接收者想要事件。不想要的事件可能不会被传播到父控件。默认下，isAccepted()被设置为true，但是 不要信任它，因为子类可能选择清除它，在他们的构造体内。</p>
+<p class="ps2">为了方便，接收标志同样可以被设置通过accept()，清除 通过 ignore().</p>
+<h2 class="ps1"><strong><span class="s1">获取函数：</span></strong></h2>
+<p class="ps2">Bool isAccepted()const</p>
+<p class="ps2">Void setAccepted(bool accepted)</p>
+<h2 class="ps1"><strong><span class="s1">Void QEvent::accept()</span></strong></h2>
+<p class="ps2">设置事件对象的接收标志，对等的调用是 setAccepted（true）。</p>
+<p class="ps2">设置接收参数 指示事件接收者想要这个事件。不想要的事件可能被传播到父控件。</p>
+<p class="ps2">参见：ignore（）</p>
+<p class="ps3"><br /></p>
+<p class="ps2">Ming：为什么是might？默认不会被传播，可能被主动propagated?</p>
+<h2 class="ps1"><strong><span class="s1">Void QEvent::ignore()</span></strong></h2>
+<p class="ps2">清除事件对象的接收标志参数，它的等价调用为setAccepted(false).</p>
+<p class="ps2">清除接收标志指示 事件接收者不想要这个事件。不想要的事件可能不会被传播到父控件。</p>
+<p class="ps2">常见:accept()</p>
+<p class="ps3"><br /></p>
+<p class="ps2">Ming：</p>
+</div>
+</body>
+</html>
